@@ -41,7 +41,7 @@ class Store(object):
             vals = self.store.get(self.wrap(key))
             if vals is None:
                 return None
-            return vals
+            return vals.decode('utf8')
 
     # add kv
     def add(self, key, val):
