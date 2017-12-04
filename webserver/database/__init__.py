@@ -31,17 +31,21 @@ class Store(object):
     def load(self):
         pass
 
-    def wrap(self, string):
-        return string.encode('utf8')
+    def wrap(self, key):
+        if isinstance(key, str):
+            key = key.encode('utf8')
+        return key
 
     # get value
-    def get(self, key):
+    def get(self, key, direct=0):
         if self.mode == 'ROCKS':
             logger.info('Request key:{}'.format(key))
             vals = self.store.get(self.wrap(key))
             if vals is None:
                 return None
-            return vals.decode('utf8')
+            if direct == 0:
+                vals = vals.decode('utf8')
+            return vals
 
     # add kv
     def add(self, key, val):
