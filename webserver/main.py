@@ -7,6 +7,7 @@ import time
 import logging
 from db import dbimport
 from database import xingtai
+from database import stockinfo
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -36,6 +37,10 @@ def main(argv):
     if mode == 'xingtai':
         xt = xingtai.Xingtai("ROCKS", mode, "/Users/liu/data/rocksdb/")
         xt.load(path)
+
+    if mode == 'stockinfo':
+        info = stockinfo.Stockinfo("ROCKS", mode, "/Users/liu/data/rocksdb/")
+        info.load(path)
 
 
 def importDayK(mode, path):
