@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}股票顶底预测{% endblock %}
+{% block wrapper %}
+    <!-- page header -->
+    <div class="page-header">
+        <h1><font color="green">预计{{day}}见顶，TOP30--卖卖卖</font></h1>
+    </div>
+    <!-- end page header -->
+    <!-- table list -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>股票代码</th>
+                                    <th>股票名称</th>
+                                    <th>预测概率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               <td>
+                                {% for u in peek %}
+                                <tr>
+                                    <td>
+                                        {{ u[0] }}
+                                    </td>
+                                    <td>
+                                        {{ u[1] }}
+                                    </td>
+                                    <td>
+                                        {{ u[2] }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                               </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- end table list -->
+
+    <!-- page header -->
+    <div class="page-header">
+        <h1><font color="red">预计{{day}}见底, TOP30-买买买-跳空低开请勿跟买!</font></h1>
+    </div>
+    <!-- end page header -->
+    <!-- table list -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>股票代码</th>
+                                    <th>股票名称</th>
+                                    <th>预测概率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               <td>
+                                {% for u in valley %}
+                                <tr>
+                                    <td>
+                                        {{ u[0] }}
+                                    </td>
+                                    <td>
+                                        {{ u[1] }}
+                                    </td>
+                                    <td>
+                                        {{ u[2] }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                               </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- end table list -->
+
+{% endblock wrapper %}
