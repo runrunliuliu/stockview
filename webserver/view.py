@@ -9,6 +9,7 @@ import codecs
 import logging
 from database.stock import Stock
 from database.stockinfo import Stockinfo
+from database.mtime import Mtime
 
 
 bootstrap = Bootstrap()
@@ -26,20 +27,38 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='a')
 
 
+def transDay(day):
+    return day[0:4] + '-' + day[4:6] + '-' + day[6:]
+
+
+def transStock(stock):
+    pre = ''
+    if stock[1] == '6':
+        pre = 'SH'
+    if stock[1] == '3' or stock[1] == '0':
+        pre = 'SZ'
+    if stock[0] == '2':
+        pre = 'ZS'
+    return pre + stock[1:]
+
+
 @app.route('/xgb')
 def xgb():
-    day = request.args.get('day')
     info = Stockinfo("ROCKS", "stockinfo", "/Users/liu/data/rocksdb/")
+    mt = Mtime("ROCKS", "mtime", "/Users/liu/data/rocksdb/")
+
+    day = request.args.get('day')
     cursor = db.cursor()
     sql = "SELECT day, stock_id, shape_json FROM tb_stock_day_kline_shape where shape_type='gd' and" + " day='" + day + "'"
-    print(sql)
     cursor.execute(sql)
     results = cursor.fetchall()
     for r in results:
         stock_id = str(r[1])
         js = json.loads(r[2])
+
+        rkey = transStock(stock_id) + '|' + transDay(day)
         if js['val'] == 0:
-            print(stock_id, info.getname(stock_id), js)
+            print(stock_id, info.getname(stock_id), js, mt.getNqs(rkey))
 
 
 @app.route('/gd')
