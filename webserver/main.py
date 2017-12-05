@@ -19,8 +19,9 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 def main(argv):
+    rock = "/Users/liu/data/rocksdb/"
     try:
-        opts, args = getopt.getopt(argv, "h:m:p:d:", ["day="])
+        opts, args = getopt.getopt(argv, "h:m:p:d:r:", ["day="])
     except getopt.GetoptError:
         print('test.py -d <time>')
         sys.exit(2)
@@ -31,20 +32,22 @@ def main(argv):
             path = arg
         elif opt in ("-d", "--kid"):
             db    = int(arg)
+        elif opt in ("-r", "--rockpath"):
+            rock  = arg
 
     if mode == 'dayk':
         importDayK(db, path)
 
     if mode == 'xingtai':
-        xt = xingtai.Xingtai("ROCKS", mode, "/Users/liu/data/rocksdb/")
+        xt = xingtai.Xingtai("ROCKS", mode, rock)
         xt.load(path)
 
     if mode == 'stockinfo':
-        info = stockinfo.Stockinfo("ROCKS", mode, "/Users/liu/data/rocksdb/")
+        info = stockinfo.Stockinfo("ROCKS", mode, rock)
         info.load(path)
 
     if mode == 'mtime':
-        mt = mtime.Mtime("ROCKS", mode, "/Users/liu/data/rocksdb/")
+        mt = mtime.Mtime("ROCKS", mode, rock)
         mt.load(path)
 
 
