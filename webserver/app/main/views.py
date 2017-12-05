@@ -69,8 +69,10 @@ def tbuy():
             day = str(r[0])
         rkey = transStock(stock_id) + '|' + transDay(day)
         if js['val'] == 0:
-            item = (r[0], stock_id, info.getname(stock_id), float(js['prob']), mt.getNqs(rkey))
-            buys.append(item)
+            nqs = int(mt.getNqs(rkey))
+            if nqs == 1101:
+                item = (r[0], stock_id, info.getname(stock_id), float(js['prob']), nqs)
+                buys.append(item)
 
     return render_template('tbuy_list.html', buys=buys, sdays=sortdays)
 
