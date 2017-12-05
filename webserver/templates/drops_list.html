@@ -6,7 +6,7 @@
 
     <!-- page header -->
     <div class="page-header">
-        <h1>股票列表</h1>
+        <h1>弃股池</h1>
     </div>
     <!-- end page header -->
 
@@ -25,23 +25,43 @@
                                     <th>#</th>
                                     <th>StockID</th>
                                     <th>StockName</th>
-                                    <th>HangYe</th>
+                                    <th>Strategy</th>
+                                    <th>DropReason</th>
+                                    <th>BPrice</th>
+                                    <th>NPrice</th>
+                                    <th>TDay</th>
+                                    <th>Holds</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for u in stocks %}
+                            {% for u in drops %}
                             <tr>
                                 <td>
-                                    {{ loop.index }}
+                                    {{loop.index}}
                                 </td>
                                 <td>
-                                    {{ u.stock.stockid }}
+                                    {{u.drop.stockid}}
                                 </td>
                                 <td>
-                                    {{ u.stock.stockname }}
+                                    {{u.drop.stockname}}
                                 </td>
                                 <td>
-                                    {{ u.stock.hangye }}
+                                    {{u.drop.strategyid}}
+                                </td>
+                                <td>
+                                    {{u.drop.dreason}}
+                                </td>
+                                <td>
+                                    {{u.drop.bprice}}
+                                </td>
+                                <td>
+                                    {{u.drop.nprice}}
+                                </td>
+                                <td>
+                                    {{u.drop.sigday}}
+                                </td>
+                                <td>
+                                    {{u.drop.holds}}
                                 </td>
                             </tr>
                             {% endfor %}
