@@ -65,7 +65,7 @@ def tbuy():
         sel = db.session.query(Tbuy.day, Tbuy.stock_id, Tbuy.shape_json)
     else:
         sel = db.session.query(Tbuy.day, Tbuy.stock_id, Tbuy.shape_json).filter(Tbuy.day == int(day))
-    results = sel.filter(Tbuy.day > 0).order_by(Tbuy.day.desc()).all()
+    results = sel.filter(Tbuy.day > sortdays[-3]).order_by(Tbuy.day.desc()).all()
 
     distnqs = set() 
     buys = []
@@ -88,7 +88,7 @@ def tbuy():
             pb  = int(float(js['prob']) * 100)
             if prob is not None and pb < float(prob):
                 ap = 0
-            if qs is not None and nqs != int(qs):
+            if qs is not None and int(qs) > 0 and nqs != int(qs):
                 ap = 0
 
             if ap == 1:
