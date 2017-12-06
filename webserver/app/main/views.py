@@ -6,6 +6,7 @@ from flask_restful import Resource, Api
 import json
 import os
 import codecs
+import operator
 import logging
 from database.stock import Stock
 from database.stockinfo import Stockinfo
@@ -43,24 +44,27 @@ def transStock(stock):
 @main.route('/tbuy')
 def tbuy():
     day = request.args.get('day')
+    prob = request.args.get('prob')
+    qs = request.args.get('nqs')
 
     info = Stockinfo("ROCKS", "stockinfo", "/Users/liu/data/rocksdb/")
     mt = Mtime("ROCKS", "mtime", "/Users/liu/data/rocksdb/")
 
     distdays = []
-
     gdlist = db.session.query(Tbuy.day).filter(Tbuy.shape_type == "gd")
     days = gdlist.distinct().all()
     for d in days:
-        print(d)
         distdays.append(d[0])
     sortdays = sorted(distdays, key=lambda x: datetime.datetime.strptime(str(x), '%Y%m%d'), reverse=True)
 
     results = None
     if day is None:
         sel = db.session.query(Tbuy.day, Tbuy.stock_id, Tbuy.shape_json)
-        results = sel.filter(Tbuy.day > 0).order_by(Tbuy.day.desc()).all()
+    else:
+        sel = db.session.query(Tbuy.day, Tbuy.stock_id, Tbuy.shape_json).filter(Tbuy.day == int(day))
+    results = sel.filter(Tbuy.day > 0).order_by(Tbuy.day.desc()).all()
 
+    distnqs = set() 
     buys = []
     for r in results:
         stock_id = str(r[1])
@@ -69,12 +73,21 @@ def tbuy():
             day = str(r[0])
         rkey = transStock(stock_id) + '|' + transDay(day)
         if js['val'] == 0:
+            ap  = 1
             nqs = int(mt.getNqs(rkey))
-            if nqs == 1101:
-                item = (r[0], stock_id, info.getname(stock_id), float(js['prob']), nqs)
+            pb  = int(float(js['prob']) * 100)
+            if prob is not None and pb < float(prob):
+                ap = 0
+            if qs is not None and nqs != int(qs):
+                ap = 0
+            if ap == 1:
+                item = (r[0], stock_id, info.getname(stock_id), pb, nqs)
                 buys.append(item)
+            distnqs.add(nqs)
+    distnqs = sorted(distnqs)
+    buys = sorted(buys, key = operator.itemgetter(3), reverse = True)
 
-    return render_template('tbuy_list.html', buys=buys, sdays=sortdays)
+    return render_template('tbuy_list.html', buys=buys, sdays=sortdays, nqs=distnqs)
 
 
 @main.route('/gd')
