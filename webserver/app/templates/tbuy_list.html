@@ -21,22 +21,32 @@
                             <option>{{d}}</option>
                         {% endfor %}
                     </select>
-                   <select id="CELUE" class="selectpicker" data-style="btn-primary">
-                    <option>选择策略</option>
-                        <option>candle</option>
-                        <option>NBS</option>
-                        <option>NEW</option>
-                        <option>hcqs</option>
+                   <select id="prob" class="selectpicker" data-style="btn-primary">
+                    <option>概率</option>
+                        <option>90</option>
+                        <option>80</option>
+                        <option>70</option>
+                        <option>50</option>
+                    </select>
+                    <select id="NQS" class="selectpicker" data-style="btn-primary">
+                    <option>选择当前形态</option>
+                        {% for d in nqs %}
+                            <option>{{d}}</option>
+                        {% endfor %}
                     </select>
                     <script type="text/javascript">
                         var oSelect=document.getElementById("DAY");
                         oSelect.onchange=function(){
                                 var day=this.options[this.selectedIndex].innerHTML;
-                                var cSelect=document.getElementById("CELUE");
+                                var cSelect=document.getElementById("prob");
                                 cSelect.onchange=function(){
-                                    var celue=this.options[this.selectedIndex].innerHTML;
-                                    var url = '/tbuys' + '?day=' + day + '&cl=' + celue;
-                                    window.location.href=url;
+                                    var prob=this.options[this.selectedIndex].innerHTML;
+                                    var nqs=document.getElementById("NQS");
+                                    nqs.onchange=function(){
+                                        var qs=this.options[this.selectedIndex].innerHTML;
+                                        var url = '/tbuy' + '?day=' + day + '&prob=' + prob + '&nqs=' + qs;
+                                        window.location.href=url;
+                                    }
                                 }
                         }
                     </script>
