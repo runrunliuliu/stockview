@@ -11,7 +11,7 @@ except ImportError:
 
 class Stock(Store):
 
-    def __init__(self, mode, ind, action, dirs=None):
+    def __init__(self, mode, ind, dirs=None):
         super(Stock, self).__init__(mode, ind, dirs)
         self.logger = logging.getLogger('STOCK')
         self.logger.info('Init Stock')
@@ -75,12 +75,12 @@ class Stock(Store):
 
     def getIndTdays(self, inst):
         ret = None
-        val = self.get(inst + '|indtdays')
+        val = self.get(inst + '|indtdays', direct = 1)
         if val is None:
             return ret
         ind_tdays = pickle.loads(val)
 
-        val = self.get(inst + '|tdaysind')
+        val = self.get(inst + '|tdaysind', direct = 1)
         if val is None:
             return ret
         tdays_ind = pickle.loads(val)
