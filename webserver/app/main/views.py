@@ -11,6 +11,7 @@ import logging
 from database.stock import Stock
 from database.stockinfo import Stockinfo
 from database.mtime import Mtime
+from database.xingtai import Xingtai
 import datetime
 from . import main
 from .. import db
@@ -49,6 +50,8 @@ def tbuy():
 
     info = Stockinfo("ROCKS", "stockinfo", "/Users/liu/data/rocksdb/")
     mt = Mtime("ROCKS", "mtime", "/Users/liu/data/rocksdb/")
+    xt = Xingtai("ROCKS", "xingtai", "/Users/liu/data/rocksdb/")
+    dk = Stock('ROCKS', 'dayk', '/Users/liu/data/rocksdb/')
 
     distdays = []
     gdlist = db.session.query(Tbuy.day).filter(Tbuy.shape_type == "gd")
@@ -71,15 +74,23 @@ def tbuy():
         js = json.loads(r[2])
         if day is None:
             day = str(r[0])
-        rkey = transStock(stock_id) + '|' + transDay(day)
+        nid = transStock(stock_id) 
+        rkey = nid + '|' + transDay(day)
         if js['val'] == 0:
             ap  = 1
+            # TongDao Check
+            intdays = dk.getIndTdays(nid)
+            xt.setVal(rkey)
+            if xt.valid('td', intdays) < 2:
+                ap = 0
+            # Qushi Check
             nqs = int(mt.getNqs(rkey))
             pb  = int(float(js['prob']) * 100)
             if prob is not None and pb < float(prob):
                 ap = 0
             if qs is not None and nqs != int(qs):
                 ap = 0
+
             if ap == 1:
                 item = (r[0], stock_id, info.getname(stock_id), pb, nqs)
                 buys.append(item)
