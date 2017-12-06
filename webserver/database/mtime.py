@@ -15,7 +15,7 @@ class Mtime(Store):
         self.logger = logging.getLogger('Mtime')
         self.logger.info('Init Mtime')
 
-    def load(self, path):
+    def load(self, path, time):
         files = glob.glob(path + "/*cxshort.csv")
         for f in files:
             arr = f.split('/')
